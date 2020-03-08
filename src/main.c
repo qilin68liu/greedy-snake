@@ -9,7 +9,6 @@ int main(void)
 
 	do
 	{
-
 		mvaddstr(LINES/2, (COLS-strlen(MSG_EXIT))/2, MSG_EXIT);
 		mvaddstr(LINES/2 - 1, (COLS-strlen(MSG_PLAY))/2, MSG_PLAY);
 

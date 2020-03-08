@@ -7,16 +7,14 @@
 #define MSG_EXIT "Press q or Q to exit"
 #define MSG_PLAY "Press p or P to play"
 
-extern gint intervals[];
-extern gint levelup[];
-
 typedef struct _game_t {
 	gint height;
+	gint interval;
 	gint width;
 	gint starty;
 	gint startx;
-	gint level;
-	gchar body_ch;
+	gchar *body_ch;
+	gchar *food_ch;
 	gboolean pause;
 	snake_t *snake;
 	food_t *food;

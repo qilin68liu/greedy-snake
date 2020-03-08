@@ -1,9 +1,5 @@
 #include "game.h"
 
-// microseconds
-gint intervals[] = { 0, 1000000, 800000, 600000, 500000, 300000, 200000 };
-gint levelup[] = { 3, 5, 10, 15, 20, 25 };
-
 static food_t *rand_food(game_t *g);
 static gboolean snake_is_alive(game_t *g);
 static gboolean snake_meet_food(snake_t *s, food_t *f);
@@ -26,34 +22,41 @@ void screen_endup()
 void game_init(game_t *g)
 {
 	g->height = 20;
+	g->interval = 1000000;
 	g->width = 21;
 	g->starty = (LINES - g->height - 2) / 2;
 	g->startx = (COLS - g->width * 2 - 3) / 2;
-	g->level = 1;
-	g->body_ch = 'O';
+	g->body_ch = "*";
+	g->food_ch = "*";
 	g->pause = TRUE;
 	g->snake = snake_new(g->height / 2, g->width / 2 + 1);
 	g->food = rand_food(g);
 	g->win = newwin(g->height + 2, g->width * 2 + 1, g->starty, g->startx);
 	wborder(g->win, '|','|','-','-','+','+','+','+');
-	refresh();
+	wrefresh(g->win);
 
-	print_param_t param = { g->win, g->body_ch };
+	print_param_t param = { g->win, g->starty, g->startx, g->body_ch };
 	print_snake(g->snake, &param);
+
+	param.msg = g->food_ch;
 	print_food(g->food, &param);
-	print_game_info(g, &param);
+
+	game_info_t game_info = { g->snake->length, g->interval };
+	print_game_info(&game_info, &param);
 }
 
 void game_endup(game_t *g)
 {
 	delwin(g->win);
+	snake_eat(g->snake, g->food);
 	snake_free(g->snake);
-	if(g->food != NULL)
-		g_free(g->food);
 }
 
 void game_start(game_t *g)
 {
+	game_info_t game_info = { g->snake->length, g->interval };
+	print_param_t param = { g->win, g->starty, g->startx, g->body_ch };
+
 	gint key;
 	while(1)
 	{
@@ -105,8 +108,9 @@ void game_start(game_t *g)
 		}
 
 		move_info_t info;
-		print_param_t param = { g->win, g->body_ch };
 		snake_move(g->snake, &info);
+
+		param.msg = g->body_ch;
 		print_move(&info, &param);
 
 		// Check whether snake is alive;
@@ -117,14 +121,20 @@ void game_start(game_t *g)
 		if(snake_meet_food(g->snake, g->food))
 		{
 			snake_eat(g->snake, g->food);
-			if(g->level < 6 && g->snake->length == levelup[g->level])
-				g->level++;
 			g->food = rand_food(g);
+
+			gint tmp_int = 1000000 - (g->snake->length - 3) * 20000;
+			g->interval = tmp_int >= 200000 ? tmp_int : 200000;
+
+			param.msg = g->food_ch;
 			print_food(g->food, &param);
-			print_game_info(g, &param);
+
+			game_info.length = g->snake->length;
+			game_info.interval = g->interval;
+			print_game_info(&game_info, &param);
 		}
 
-		g_usleep(intervals[g->level]);
+		g_usleep(g->interval);
 	}
 }
 
