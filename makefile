@@ -1,7 +1,7 @@
 AT = @
 CC = gcc -c
 LD = gcc -o
-DEBUG ?= yes
+DEBUG ?= no
 USEGLIB ?= yes
 USENCUR ?= yes
 

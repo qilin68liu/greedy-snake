@@ -11,7 +11,6 @@ void screen_init()
 	noecho();
 	curs_set(0);
 	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
 }
 
 void screen_endup()
@@ -21,6 +20,8 @@ void screen_endup()
 
 void game_init(game_t *g)
 {
+	nodelay(stdscr, TRUE);
+
 	g->height = 20;
 	g->interval = 1000000;
 	g->width = 21;
@@ -47,6 +48,8 @@ void game_init(game_t *g)
 
 void game_endup(game_t *g)
 {
+	nodelay(stdscr, FALSE);
+
 	delwin(g->win);
 	snake_eat(g->snake, g->food);
 	snake_free(g->snake);
