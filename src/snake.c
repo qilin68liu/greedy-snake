@@ -2,8 +2,7 @@
 
 #define DEFAULT_LEN 3
 
-snake_t *snake_new(gint y, gint x)
-{
+snake_t *snake_new(gint y, gint x) {
 	snake_t *s = g_new(snake_t, 1);
 
 	s->length = DEFAULT_LEN;
@@ -17,14 +16,12 @@ snake_t *snake_new(gint y, gint x)
 	return s;
 }
 
-void snake_free(snake_t *s)
-{
+void snake_free(snake_t *s) {
 	g_queue_free_full(s->body, g_free);
 	g_free(s);
 }
 
-void snake_move(snake_t *s, move_info_t *i)
-{
+void snake_move(snake_t *s, move_info_t *i) {
 	pos_t *n = g_queue_pop_tail(s->body);
 	pos_t *h = g_queue_peek_head(s->body);
 
@@ -51,8 +48,7 @@ void snake_move(snake_t *s, move_info_t *i)
 	g_queue_push_head(s->body, n);
 }
 
-void snake_eat(snake_t *s, food_t *f)
-{
+void snake_eat(snake_t *s, food_t *f) {
 	pos_t *t = s->body->tail->data;
 	pos_t *pt = s->body->tail->prev->data;
 
@@ -72,8 +68,7 @@ void snake_eat(snake_t *s, food_t *f)
 	s->length++;
 }
 
-food_t *food_new(gint y, gint x)
-{
+food_t *food_new(gint y, gint x) {
 	food_t *f = g_new(food_t, 1);
 	f->y = y;
 	f->x = x;

@@ -4,8 +4,7 @@ static food_t *rand_food(game_t *g);
 static gboolean snake_is_alive(game_t *g);
 static gboolean snake_meet_food(snake_t *s, food_t *f);
 
-void screen_init()
-{
+void screen_init() {
 	initscr();
 	cbreak();
 	noecho();
@@ -13,13 +12,11 @@ void screen_init()
 	keypad(stdscr, TRUE);
 }
 
-void screen_endup()
-{
+void screen_endup() {
 	endwin();
 }
 
-void game_init(game_t *g)
-{
+void game_init(game_t *g) {
 	nodelay(stdscr, TRUE);
 
 	g->height = 20;
@@ -46,8 +43,7 @@ void game_init(game_t *g)
 	print_game_info(&game_info, &param);
 }
 
-void game_endup(game_t *g)
-{
+void game_endup(game_t *g) {
 	nodelay(stdscr, FALSE);
 
 	delwin(g->win);
@@ -55,18 +51,14 @@ void game_endup(game_t *g)
 	snake_free(g->snake);
 }
 
-void game_start(game_t *g)
-{
+void game_start(game_t *g) {
 	game_info_t game_info = { g->snake->length, g->interval };
 	print_param_t param = { g->win, g->starty, g->startx, g->body_ch };
 
 	gint key;
-	while(1)
-	{
-		if((key = getch()) != ERR)
-		{
-			switch(key)
-			{
+	while(1) {
+		if((key = getch()) != ERR) {
+			switch(key) {
 				case 'w':
 				case 'W':
 				case KEY_UP:
@@ -121,8 +113,7 @@ void game_start(game_t *g)
 			return;
 
 		//check whether snake meet the food
-		if(snake_meet_food(g->snake, g->food))
-		{
+		if(snake_meet_food(g->snake, g->food)) {
 			snake_eat(g->snake, g->food);
 			g->food = rand_food(g);
 
@@ -141,8 +132,7 @@ void game_start(game_t *g)
 	}
 }
 
-static food_t *rand_food(game_t *g)
-{
+static food_t *rand_food(game_t *g) {
 	pos_t pos;
 	GRand *rand = g_rand_new();
 
@@ -155,14 +145,12 @@ static food_t *rand_food(game_t *g)
 	return food_new(pos.y, pos.x);
 }
 
-static gboolean snake_meet_food(snake_t *s, food_t *f)
-{
+static gboolean snake_meet_food(snake_t *s, food_t *f) {
 	pos_t *h = g_queue_peek_head(s->body);
 	return !pos_cmp(h, (pos_t *)f);
 }
 
-static gboolean snake_is_alive(game_t *g)
-{
+static gboolean snake_is_alive(game_t *g) {
 	pos_t *h = g_queue_pop_head(g->snake->body);
 	gboolean ret = TRUE;
 

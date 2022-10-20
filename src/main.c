@@ -1,14 +1,12 @@
 #include <game.h>
 
-int main(void)
-{
+int main(void) {
 	screen_init();
 
 	gint key;
 	game_t game;
 
-	do
-	{
+	do {
 		mvaddstr(LINES/2, (COLS-strlen(MSG_EXIT))/2, MSG_EXIT);
 		mvaddstr(LINES/2 - 1, (COLS-strlen(MSG_PLAY))/2, MSG_PLAY);
 
