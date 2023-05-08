@@ -27,7 +27,7 @@ CFLAGS += $(shell pkg-config --cflags $(LIBGLIB))
 LDFLAGS += $(shell pkg-config --libs $(LIBGLIB))
 endif
 ifeq ($(USENCUR), yes)
-LDFLAGS += -lcurses -ltinfo
+LDFLAGS += -lncurses -ltinfo
 endif
 
 all: $(TARGET)
